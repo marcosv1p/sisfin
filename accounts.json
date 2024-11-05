@@ -1,0 +1,26 @@
+[
+    {
+        "bank": "eb982cda-bf7c-41e8-bd7f-8d189ef48b97",
+        "name": "Conta reserva",
+        "description": "Teste: account-01",
+        "balance": "4500.00",
+        "account_id": "3eb07110-d1f2-4779-812f-23a19dd8b37f",
+        "created_at": "2024-11-01T16:15:07.147593"
+    },
+    {
+        "bank": "1d25da5b-2d08-4960-9edd-ce81cfc633c5",
+        "name": "Conta para teste",
+        "description": "Teste: account02",
+        "balance": "3000.00",
+        "account_id": "b783f20e-6c18-4dc5-852a-85f612c350f5",
+        "created_at": "2024-11-01T16:15:07.147593"
+    },
+    {
+        "bank": "e1f6c1af-9c5d-444a-869e-512fdd9e6872",
+        "name": "Conta para estudos",
+        "description": "Teste: account03",
+        "balance": "9000.00",
+        "account_id": "84ad30ab-59fc-4af1-97fe-3d33d6480771",
+        "created_at": "2024-11-01T16:15:07.147593"
+    }
+]
