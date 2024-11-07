@@ -1,14 +1,15 @@
 from datetime import datetime
+from typing import Optional, List
 
 from infra.entities.bank import Bank
 from infra.configs.connection import DBConnectionHandler
 
 
 class BankRepository:
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = DBConnectionHandler()
     
-    def select(self):
+    def select(self) -> List[Bank]:
         """Consulta todas as contas bancárias no banco de dados."""
         with DBConnectionHandler() as db:
             data = db.session\
@@ -16,7 +17,7 @@ class BankRepository:
                 .all()
             return data
     
-    def select_from_id(self, bank_id: str):
+    def select_from_id(self, bank_id: str) -> Optional[Bank]:
         """Consulta todas as contas bancárias no banco de dados."""
         with DBConnectionHandler() as db:
             data = db.session\
@@ -24,8 +25,8 @@ class BankRepository:
                 .filter(Bank.bank_id==bank_id)\
                 .one_or_none()
             return data
-
-    def insert(self, bank_id:str, name: str, description: str, created_at: datetime, url_image: str = None) -> None:
+    
+    def insert(self, bank_id:str, name: str, description: str, created_at: datetime, url_image: str = None) -> Bank:
         with self.db as db:
             new_bank = Bank(
                 bank_id=bank_id,
@@ -36,15 +37,15 @@ class BankRepository:
             )
             db.session.add(new_bank)
             db.session.commit()
-            return self.select_from_id(bank_id=new_bank.bank_id)
-
-    def delete(self, bank_id: str):
+            return new_bank
+    
+    def delete(self, bank_id: str) -> None:
         """Deleta uma conta bancária com base no ID fornecido."""
         with DBConnectionHandler() as db:
             db.session.query(Bank).filter(Bank.bank_id == bank_id).delete()
             db.session.commit()
-
-    def update(self, bank_id:str, new_bank_id:str=None, new_name: str=None, new_description: str=None, new_create_at: datetime=None, new_url_image: str=None):
+    
+    def update(self, bank_id:str, new_bank_id:str=None, new_name: str=None, new_description: str=None, new_create_at: datetime=None, new_url_image: str=None) -> Optional[Bank]:
         """Atualiza uma conta bancária com base no ID fornecido."""
         with DBConnectionHandler() as db:
             bank = db.session.query(Bank).filter(Bank.bank_id == bank_id).first()

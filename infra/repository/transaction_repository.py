@@ -1,15 +1,16 @@
 from datetime import datetime
+from typing import Optional, List
 from sqlalchemy.orm import joinedload
-from typing import Optional
 
 from infra.entities.transaction import Transaction
 from infra.configs.connection import DBConnectionHandler
 
-class TransactionRepository:
-    def __init__(self):
-        self.db = DBConnectionHandler()
 
-    def insert(self, transaction_id: str, date: datetime, description: str, value: float, transaction_type: str, origin: Optional[str], destination: str, status: bool, created_at: datetime) -> str:
+class TransactionRepository:
+    def __init__(self) -> None:
+        self.db = DBConnectionHandler()
+    
+    def insert(self, transaction_id: str, date: datetime, description: str, value: float, transaction_type: str, origin: Optional[str], destination: str, status: bool, created_at: datetime) -> Transaction:
         """Insere uma nova transação no banco de dados.
         
         Args:
@@ -21,7 +22,7 @@ class TransactionRepository:
             origin (str): O ID da conta de origem.
             destination (str): O ID da conta de destino.
             status (bool): O status da transação (ativo ou inativo). Defaults to True.
-
+        
         Retorna:
             str: O ID da transação recém-criada.
         """
@@ -39,9 +40,9 @@ class TransactionRepository:
             )
             db.session.add(new_transaction)
             db.session.commit()
-            return new_transaction.transaction_id
-
-    def select(self):
+            return new_transaction
+    
+    def select(self) -> List[Transaction]:
         """Consulta todas as transações no banco de dados.
         
         Retorna:
@@ -53,20 +54,20 @@ class TransactionRepository:
             .options(joinedload(Transaction.account_origin), joinedload(Transaction.account_destination))\
             .all()
         return data
-
-    def select_from_id(self, transaction_id: str) -> Transaction:
+    
+    def select_from_id(self, transaction_id: str) -> Optional[Transaction]:
         """Consulta uma transação pelo ID fornecido.
         
         Args:
             transaction_id (str): O ID da transação.
-
+        
         Retorna:
             Transaction: A transação correspondente ao ID, ou None se não encontrada.
         """
         with self.db as db:
             return db.session.query(Transaction).filter(Transaction.transaction_id == transaction_id).one_or_none()
-
-    def update(self, transaction_id: str, new_transaction_id: str = None, new_date: datetime = None, new_description: str = None, new_value: float = None, new_transaction_type: str = None, new_origin: str = None, new_destination: str = None, new_status: bool = None, new_created_at: datetime = None):
+    
+    def update(self, transaction_id: str, new_transaction_id: str = None, new_date: datetime = None, new_description: str = None, new_value: float = None, new_transaction_type: str = None, new_origin: str = None, new_destination: str = None, new_status: bool = None, new_created_at: datetime = None) -> Optional[Transaction]:
         """Atualiza uma transação com base no ID fornecido.
         
         Args:
@@ -77,7 +78,7 @@ class TransactionRepository:
             new_origin (str, optional): O novo ID da conta de origem. Defaults to None.
             new_destination (str, optional): O novo ID da conta de destino. Defaults to None.
             new_status (bool, optional): O novo status da transação. Defaults to None.
-
+        
         Retorna:
             Transaction: A transação atualizada, ou None se a transação não foi encontrada.
         """
@@ -118,8 +119,8 @@ class TransactionRepository:
                 db.session.commit()
                 return self.select_from_id(transaction_id=new_transaction_id)
             return None
-
-    def delete(self, transaction_id: str):
+    
+    def delete(self, transaction_id: str) -> None:
         """Deleta uma transação com base no ID fornecido.
         
         Args:

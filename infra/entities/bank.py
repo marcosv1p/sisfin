@@ -22,5 +22,5 @@ class Bank(Base):
             "created_at": self.created_at.isoformat(),
         }
     
-    # def __repr__(self):
-    #     return f"<Bank(id='{self.id}', name='{self.name}', description='{self.description}', created_at='{self.created_at}')>"
+    def __repr__(self):
+        return f"<Bank(bank_id='{self.id}', name='{self.name}', url_image='{self.url_image}', created_at='{self.created_at}')>"

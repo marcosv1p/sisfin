@@ -5,7 +5,6 @@ from datetime import datetime
 
 from infra import TransactionRepository
 from src.financial.transaction import TransactionModel
-from src.financial.account import AccountModel
 from src.financial.database_handler.account_handler import AccountDatabaseHandler
 
 
@@ -14,10 +13,26 @@ class TransactionDatabaseHandler:
     
     @classmethod
     def insert(cls, transaction: TransactionModel) -> None:
-        """Insere uma nova transação no banco de dados."""
+        """
+        Insere uma nova transação no banco de dados. Se a transação já existir, ela é substituída.
+        
+        ### Parâmetros:
+        - **transaction** (`TransactionModel`): Instância de `TransactionModel` representando a transação a ser inserida.
+        
+        ### Comportamento:
+        - Verifica se já existe uma transação com o `transaction_id` fornecido.
+        - Se existir, a transação antiga é removida antes de inserir a nova.
+        
+        ### Exemplo de Uso:
+        ```python
+        new_transaction = TransactionModel(description="Pagamento", value=Decimal("500.00"))
+        TransactionDatabaseHandler.insert(new_transaction)
+        ```
+        """
         result = cls._db.select_from_id(transaction.transaction_id.hex)
         if result:
             cls._db.delete(account_id=transaction.account_id.hex)
+        
         cls._db.insert(
             transaction_id=transaction.transaction_id.hex,
             date=transaction.date,
@@ -32,7 +47,23 @@ class TransactionDatabaseHandler:
     
     @classmethod
     def update(cls, transaction_id: UUID, transaction: TransactionModel) -> None:
-        """Atualiza os dados de uma transação existente apenas com os campos alterados."""
+        """
+        Atualiza os dados de uma transação existente no banco de dados, aplicando apenas os campos alterados.
+        
+        ### Parâmetros:
+        - **transaction_id** (`UUID`): Identificador único da transação a ser atualizada.
+        - **transaction** (`TransactionModel`): Instância de `TransactionModel` com os novos dados da transação.
+        
+        ### Comportamento:
+        - Obtém a transação existente pelo `transaction_id`.
+        - Verifica e aplica as mudanças nos campos que foram atualizados.
+        
+        ### Exemplo de Uso:
+        ```python
+        updated_transaction = TransactionModel(description="Transferência Atualizada", value=Decimal("300.00"))
+        TransactionDatabaseHandler.update(transaction_id=UUID("id_da_transacao"), transaction=updated_transaction)
+        ```
+        """
         
         # Obter os dados atuais da transação
         current_transaction = cls._db.select_from_id(transaction_id=transaction_id.hex)
@@ -68,16 +99,47 @@ class TransactionDatabaseHandler:
         
         # Executa o update apenas se houver campos alterados
         if updates:
-            cls._db.update(transaction_id=transaction_id, **updates)
+            cls._db.update(
+                transaction_id=transaction_id.hex,
+                new_description=updates.get("new_description"),
+                new_value=updates.get("new_value"),
+                new_transaction_type=updates.get("new_transaction_type"),
+                new_origin=updates.get("new_origin"),
+                new_destination=updates.get("new_destination"),
+                new_status=updates.get("new_status")
+            )
     
     @classmethod
     def delete(cls, transaction_id: UUID) -> None:
-        """Deleta uma transação com base no ID fornecido."""
+        """
+        Deleta uma transação do banco de dados com base no ID fornecido.
+        
+        ### Parâmetros:
+        - **transaction_id** (`UUID`): Identificador único da transação a ser deletada.
+        
+        ### Exemplo de Uso:
+        ```python
+        TransactionDatabaseHandler.delete(UUID("id_da_transacao"))
+        ```
+        """
         cls._db.delete(transaction_id=transaction_id.hex)
     
     @classmethod
     def get(cls, transaction_id: UUID) -> TransactionModel:
-        """Obtém uma conta bancária pelo ID."""
+        """
+        Obtém uma instância de `TransactionModel` pelo `transaction_id` fornecido.
+        
+        ### Parâmetros:
+        - **transaction_id** (`UUID`): Identificador único da transação desejada.
+        
+        ### Retorno:
+        - (`Optional[TransactionModel]`): Instância de `TransactionModel` correspondente ao `transaction_id`, ou `None` se a transação não for encontrada.
+        
+        ### Exemplo de Uso:
+        ```python
+        transaction = TransactionDatabaseHandler.get(UUID("id_da_transacao"))
+        ```
+        """
         raw_data = cls._db.select_from_id(transaction_id=transaction_id.hex)
         if raw_data:
             data = raw_data.to_dict()
@@ -89,12 +151,32 @@ class TransactionDatabaseHandler:
                 transaction_id=transaction_id,
                 created_at=datetime.fromisoformat(data.get("created_at")),
                 )
+            
+            # date: datetime = datetime.now,
+            # description: Any = None,
+            # value: Any = Decimal("0.00"),
+            # origin: AccountModel | None = None,
+            # transaction_type: TransactionsTypes,
+            # destination: AccountModel,
+            # transaction_id: UUID = uuid4,
+            # created_at: datetime = datetime.now,
+            # status: bool = False
             return TransactionModel(**data)
         return None
     
     @classmethod
     def get_all(cls) -> List[TransactionModel]:
-        """Obtém todas as transações."""
+        """
+        Obtém todas as instâncias de `TransactionModel` presentes no banco de dados.
+        
+        ### Retorno:
+        - (`List[TransactionModel]`): Lista de todas as instâncias de `TransactionModel`.
+        
+        ### Exemplo de Uso:
+        ```python
+        all_transactions = TransactionDatabaseHandler.get_all()
+        ```
+        """
         raw_data = cls._db.select()
         if raw_data:
             data = []

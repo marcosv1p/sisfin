@@ -28,4 +28,4 @@ class BankAccount(Base):
         }
     
     def __repr__(self):
-        return f"<BankAccount(id={self.account_id}, name={self.name}, balance={self.balance}, bank={self.bank})>"
+        return f"<BankAccount(account_id={self.account_id}, name={self.name}, balance={self.balance}, bank_id={self.bank_id}, created_at='{self.created_at}')>"

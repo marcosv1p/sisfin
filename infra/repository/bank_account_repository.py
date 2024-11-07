@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional, List
 from sqlalchemy.orm import joinedload
 
 from infra.entities.bank import Bank
@@ -7,10 +8,10 @@ from infra.configs.connection import DBConnectionHandler
 
 
 class BankAccountRepository:
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = DBConnectionHandler()
     
-    def select(self):
+    def select(self) -> List[BankAccount]:
         """Consulta todas as contas bancárias no banco de dados.
         
         Retorna uma lista de tuplas contendo o ID da conta, nome e saldo.
@@ -22,19 +23,19 @@ class BankAccountRepository:
                 .all()
         return data
     
-    def select_from_id(self, account_id: str) -> BankAccount:
+    def select_from_id(self, account_id: str) -> Optional[BankAccount]:
         """Consulta uma conta bancária pelo ID fornecido.
         
         Args:
             id (str): O ID da conta bancária.
-
+        
         Retorna:
             BankAccount: A conta bancária correspondente ao ID, ou None se não encontrada.
         """
         with self.db as db:
             return db.session.query(BankAccount).filter(BankAccount.account_id == account_id).one_or_none()
     
-    def insert(self, account_id: str, name: str, description: str, created_at: datetime, bank_id: str, balance: float) -> str:
+    def insert(self, account_id: str, name: str, description: str, created_at: datetime, bank_id: str, balance: float) -> BankAccount:
         """Insere uma nova conta bancária no banco de dados.
         
         Args:
@@ -44,7 +45,7 @@ class BankAccountRepository:
             created_at (datetime): A data de criação da conta.
             bank (Bank): O objeto Bank associado à conta.
             balance (float): O saldo inicial da conta.
-
+        
         Retorna:
             str: O ID da conta recém-criada.
         """
@@ -59,9 +60,9 @@ class BankAccountRepository:
             )
             db.session.add(new_account)
             db.session.commit()
-            return new_account.account_id
-
-    def delete(self, account_id: str):
+            return new_account
+    
+    def delete(self, account_id: str) -> None:
         """Deleta uma conta bancária com base no ID fornecido.
         
         Args:
@@ -70,8 +71,8 @@ class BankAccountRepository:
         with self.db as db:
             db.session.query(BankAccount).filter(BankAccount.account_id == account_id).delete()
             db.session.commit()
-
-    def update(self, account_id: str, new_account_id: str = None, new_name: str = None, new_description: str = None, new_created_at: datetime = None, new_bank_id: str = None, new_balance: float = None):
+    
+    def update(self, account_id: str, new_account_id: str = None, new_name: str = None, new_description: str = None, new_created_at: datetime = None, new_bank_id: str = None, new_balance: float = None) -> Optional[BankAccount]:
         """Atualiza uma conta bancária com base no ID fornecido.
         
         Args:
@@ -82,7 +83,7 @@ class BankAccountRepository:
             new_created_at (datetime, optional): A nova data de criação da conta. Defaults to None.
             new_bank (Bank, optional): O novo banco associado à conta. Defaults to None.
             new_balance (float, optional): O novo saldo da conta. Defaults to None.
-
+        
         Retorna:
             BankAccount: A conta bancária atualizada, ou None se a conta não foi encontrada.
         """

@@ -43,6 +43,6 @@ class Transaction(Base):
         }
     
     def __repr__(self):
-        return (f"<Transaction(id='{self.transaction_id}', date='{self.date}', "
+        return (f"<Transaction(transaction_id='{self.transaction_id}', date='{self.date}', "
                 f"description='{self.description}', value={self.value}, "
-                f"status={self.status}, created_at='{self.created_at}')>")
+                f"status={self.status}, created_at='{self.created_at}', transaction_type='{self.transaction_type}')>")
