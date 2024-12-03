@@ -31,6 +31,9 @@ fh.add_transaction(trasaction04)
 fh.add_transaction(trasaction05)
 fh.add_transaction(trasaction06)
 
+for trs in fh.get_all_transactions():
+    fh._execute_transaction(trs.transaction_id)
+
 
 
 
