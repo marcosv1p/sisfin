@@ -91,6 +91,7 @@ class FinancialHandler:
     def _execute_transaction(self, transaction_id: UUID) -> None:
         assert isinstance(transaction_id, UUID)
         transaction = self.db.handler_transaction.get(transaction_id=transaction_id)
+        
         if transaction:
             if not transaction.status and transaction.calculate:
                 
@@ -103,9 +104,11 @@ class FinancialHandler:
                     case TransactionsTypes.DEPOSIT:
                         destination_account.balance += transaction.amount
                         self.update_account(account_id=destination_account.account_id, account=destination_account)
+                    
                     case TransactionsTypes.WITHDRAW:
                         destination_account.balance -= transaction.amount
                         self.update_account(account_id=destination_account.account_id, account=destination_account)
+                    
                     case TransactionsTypes.TRANSFER:
                         if not origin_account:
                             raise ...
@@ -113,9 +116,11 @@ class FinancialHandler:
                         destination_account.balance += transaction.amount
                         self.update_account(account_id=origin_account.account_id, account=origin_account)
                         self.update_account(account_id=destination_account.account_id, account=destination_account)
+                    
                     case TransactionsTypes.ADJUSTMENT:
                         destination_account.balance += transaction.amount
                         self.update_account(account_id=destination_account.account_id, account=destination_account)
+                    
                     case _:
                         raise ...
             else:

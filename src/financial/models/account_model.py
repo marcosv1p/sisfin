@@ -28,6 +28,3 @@ class AccountModel(BaseModel):
             else:
                 raise ValueError(f"O atributo '{key}' não existe na classe AccountModel.")
         return self
-
-
-
