@@ -1,39 +1,37 @@
-import psutil
-import json
+from src.financial.system.financial_handler import FinancialHandler
+from src.financial.models import UserModel, AccountModel, TransactionModel, TransactionsTypes
 
-def format_psutil_info():
-    cpu_info = {
-        'CPU Percent (%)': psutil.cpu_percent(interval=1),
-        'CPU Count': psutil.cpu_count(),
-        'CPU Frequency (MHz)': psutil.cpu_freq().current,
-    }
 
-    memory_info = {
-        'Total Memory (GB)': round(psutil.virtual_memory().total / (1024 ** 3), 2),
-        'Available Memory (GB)': round(psutil.virtual_memory().available / (1024 ** 3), 2),
-        'Used Memory (GB)': round(psutil.virtual_memory().used / (1024 ** 3), 2),
-        'Memory Usage (%)': psutil.virtual_memory().percent,
-    }
+user01 = UserModel(nickname="Marcos")
 
-    disk_info = {
-        'Total Disk (GB)': round(psutil.disk_usage('/').total / (1024 ** 3), 2),
-        'Used Disk (GB)': round(psutil.disk_usage('/').used / (1024 ** 3), 2),
-        'Free Disk (GB)': round(psutil.disk_usage('/').free / (1024 ** 3), 2),
-        'Disk Usage (%)': psutil.disk_usage('/').percent,
-    }
+acc01 = AccountModel(name="Acc01", description="TesteXX", created_by=user01.user_id) # 130
+acc02 = AccountModel(name="Acc02", description="Teste02", created_by=user01.user_id) # 40
+acc03 = AccountModel(name="Acc03", description="Teste03", created_by=user01.user_id) # 50
 
-    network_info = {}
-    for interface, addrs in psutil.net_if_addrs().items():
-        network_info[interface] = [{'Address': addr.address, 'Netmask': addr.netmask} for addr in addrs]
+trasaction01 = TransactionModel(description="Add 10", amount=100, transaction_type=TransactionsTypes.DEPOSIT, destination=acc01, created_by=user01.user_id)
+trasaction02 = TransactionModel(description="Add 10", amount=100, transaction_type=TransactionsTypes.DEPOSIT, destination=acc02, created_by=user01.user_id)
+trasaction03 = TransactionModel(description="Add 10", amount=100, transaction_type=TransactionsTypes.DEPOSIT, destination=acc03, created_by=user01.user_id)
+trasaction04 = TransactionModel(description="Add 10", amount=10, transaction_type=TransactionsTypes.WITHDRAW, destination=acc01, created_by=user01.user_id)
+trasaction05 = TransactionModel(description="Add 10", amount=20, transaction_type=TransactionsTypes.WITHDRAW, destination=acc02, created_by=user01.user_id)
+trasaction05 = TransactionModel(description="Add 10", amount=30, transaction_type=TransactionsTypes.WITHDRAW, destination=acc03, created_by=user01.user_id)
+trasaction06 = TransactionModel(description="Add 10", amount=40, transaction_type=TransactionsTypes.WITHDRAW, destination=acc01, origin=acc02, created_by=user01.user_id)
 
-    info = {
-        'CPU Information': cpu_info,
-        'Memory Information': memory_info,
-        'Disk Information': disk_info,
-        'Network Information': network_info
-    }
+fh = FinancialHandler()
 
-    return json.loads(json.dumps(info, indent=4, ensure_ascii=False))
+fh.add_user(user01)
 
-formatted_info = format_psutil_info()
-print(formatted_info)
+fh.add_account(acc01)
+fh.add_account(acc02)
+fh.add_account(acc03)
+
+fh.add_transaction(trasaction01)
+fh.add_transaction(trasaction02)
+fh.add_transaction(trasaction03)
+fh.add_transaction(trasaction04)
+fh.add_transaction(trasaction05)
+fh.add_transaction(trasaction06)
+
+
+
+
+

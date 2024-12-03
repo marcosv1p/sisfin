@@ -1,3 +1,3 @@
-from infra.repository.bank_repository import BankRepository
-from infra.repository.bank_account_repository import BankAccountRepository
+from infra.repository.user_repository import UserRepository
+from infra.repository.account_repository import AccountRepository
 from infra.repository.transaction_repository import TransactionRepository

@@ -1,1 +1,0 @@
-from src.financial.bank.bank_model import BankModel
