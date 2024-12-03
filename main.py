@@ -1,6 +1,6 @@
 from src.financial.system.financial_handler import FinancialHandler
 from src.financial.models import UserModel, AccountModel, TransactionModel, TransactionsTypes
-
+from decimal import Decimal
 
 user01 = UserModel(nickname="Marcos")
 
@@ -31,8 +31,23 @@ fh.add_transaction(trasaction04)
 fh.add_transaction(trasaction05)
 fh.add_transaction(trasaction06)
 
-for trs in fh.get_all_transactions():
-    fh._execute_transaction(trs.transaction_id)
+
+trasaction_id = trasaction01.transaction_id
+
+# modificando a transação
+trasaction01.amount = Decimal("999.99")
+trasaction01.description = "Teste de transação 999.99"
+trasaction01.calculate = False
+trasaction01.status = True
+
+fh.update_transaction(transaction_id=trasaction_id, transaction=trasaction01)
+
+
+
+
+# DEU ZEBRA AQUI
+# for trs in fh.get_all_transactions():
+#     fh._execute_transaction(trs.transaction_id)
 
 
 
