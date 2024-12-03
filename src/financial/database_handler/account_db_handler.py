@@ -12,8 +12,8 @@ class AccountDatabaseHandler(DatabaseHandlerInterface):
     
     @classmethod
     def insert(cls, account: AccountModel) -> None:
-        account = cls._db.select_from_id(account.account_id.hex)
-        if account:
+        exist_account = cls._db.select_from_id(account.account_id.hex)
+        if exist_account:
             raise AccountDatabaseHandlerError("Já existe um 'Account' com mesmo 'account_id' no banco de dados")
         cls._db.insert(
             account_id=account.account_id.hex,
@@ -21,7 +21,7 @@ class AccountDatabaseHandler(DatabaseHandlerInterface):
             description=account.description,
             balance=account.balance,
             created_at=account.created_at,
-            created_by=account.created_by,
+            created_by=account.created_by.hex,
         )
     
     @classmethod

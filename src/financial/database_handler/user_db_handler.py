@@ -12,8 +12,8 @@ class UserDatabaseHandler(DatabaseHandlerInterface):
     
     @classmethod
     def insert(cls, user: UserModel) -> None:
-        user = cls._db.select_from_id(user.user_id.hex)
-        if user:
+        exist_user = cls._db.select_from_id(user.user_id.hex)
+        if exist_user:
             raise UserDatabaseHandlerError("Já existe um 'User' com mesmo 'user_id' no banco de dados")
         cls._db.insert(
             user_id=user.user_id.hex,

@@ -16,13 +16,9 @@ class Transaction(Base):
     status = Column(Boolean, default=True, nullable=False)
     calculate = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
-    created_by = Column(String(64), ForeignKey("user.user_id"), nullable=False)
-    origin = Column(String(64), ForeignKey("account.account_id"))
-    destination = Column(String(64), ForeignKey("account.account_id"), nullable=False)
-    
-    user = relationship("User")
-    account_origin = relationship("Account", foreign_keys=[origin])
-    account_destination = relationship("Account", foreign_keys=[destination])
+    created_by = Column(String(64), ForeignKey("users.user_id"), nullable=False)
+    origin = Column(String(64), ForeignKey("accounts.account_id"))
+    destination = Column(String(64), ForeignKey("accounts.account_id"), nullable=False)
     
     def __repr__(self):
         return (f"<Transaction(transaction_id='{self.transaction_id}', date='{self.date}', "

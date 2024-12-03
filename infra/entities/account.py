@@ -12,9 +12,7 @@ class Account(Base):
     description = Column(String(256), nullable=False)
     balance = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False)
-    created_by = Column(String(64), ForeignKey("user.user_id"), nullable=False)
-    
-    user = relationship("User")
+    created_by = Column(String(64), ForeignKey("users.user_id"), nullable=False)
     
     def __repr__(self):
         return (f"<Account(account_id='{self.account_id}', name='{self.name}', "

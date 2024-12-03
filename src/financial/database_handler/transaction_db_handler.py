@@ -26,8 +26,8 @@ class TransactionDatabaseHandler(DatabaseHandlerInterface):
             calculate=transaction.calculate,
             created_at=transaction.created_at,
             created_by=transaction.created_by.hex,
-            origin=transaction.origin.account_id.hex if transaction.origin else None,
-            destination=transaction.destination.account_id.hex,
+            origin=transaction.origin.hex if transaction.origin else None,
+            destination=transaction.destination.hex,
         )
     
     @classmethod
