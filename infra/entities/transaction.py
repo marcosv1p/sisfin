@@ -13,7 +13,7 @@ class Transaction(Base):
     description = Column(String(255), nullable=False)
     amount = Column(Float, nullable=False) # Troquei de value para amount
     transaction_type = Column(String(64), nullable=False)
-    status = Column(Boolean, default=True, nullable=False)
+    status = Column(Boolean, default=False, nullable=False)
     calculate = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
     created_by = Column(String(64), ForeignKey("users.user_id"), nullable=False)
