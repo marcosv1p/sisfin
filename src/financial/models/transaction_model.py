@@ -21,7 +21,7 @@ class TransactionModel(BaseModel):
     ) = Field(default=str())
     amount: condecimal(decimal_places=2) = Field(default=Decimal("0.00"))
     transaction_type: TransactionsTypes
-    status: bool = Field(default=False)
+    status: bool = Field(default=False) 
     calculate: bool = Field(default=True)
     created_at: datetime = Field(default_factory=datetime.now)
     created_by: UUID
