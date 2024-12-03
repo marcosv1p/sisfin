@@ -44,25 +44,25 @@ class TransactionRepository:
         with self.db as db:
             transaction = db.session.query(Transaction).filter(Transaction.transaction_id == transaction_id).one_or_none()
             if transaction:
-                if date:
+                if date is not None:
                     transaction.date = date
-                if description:
+                if description is not None:
                     transaction.description = description
-                if amount:
-                    transaction.value = amount
-                if transaction_type:
+                if amount is not None:
+                    transaction.amount = amount
+                if transaction_type is not None:
                     transaction.transaction_type = transaction_type
-                if status:
+                if status is not None:
                     transaction.status = status
-                if calculate:
+                if calculate is not None:
                     transaction.calculate = calculate
-                if created_at:
+                if created_at is not None:
                     transaction.created_at = created_at
-                if created_by:
+                if created_by is not None:
                     transaction.created_by = created_by
-                if origin:
+                if origin is not None:
                     transaction.origin = origin
-                if destination:
+                if destination is not None:
                     transaction.destination = destination
                 db.session.commit()
                 return self.select_from_id(transaction_id=transaction_id)
