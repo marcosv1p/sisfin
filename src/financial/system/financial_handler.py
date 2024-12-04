@@ -94,11 +94,11 @@ class FinancialHandler:
         
         if transaction:
             if not transaction.status and transaction.calculate:
-                
+                transaction.status = True
                 self.update_transaction(transaction_id=transaction_id, transaction=transaction)
                 
                 destination_account = self.db.handler_account.get(transaction.destination)
-                origin_account = self.db.handler_account.get(transaction.origin)
+                origin_account = self.db.handler_account.get(transaction.origin) if transaction.origin else None
                 
                 match transaction.transaction_type:
                     case TransactionsTypes.DEPOSIT:
@@ -124,7 +124,7 @@ class FinancialHandler:
                     case _:
                         raise ...
             else:
-                raise ...
+                ...
         else:
             raise ...
     
