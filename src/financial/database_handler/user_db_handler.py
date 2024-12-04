@@ -28,16 +28,19 @@ class UserDatabaseHandler(DatabaseHandlerInterface):
         if not current_user:
             raise UserDatabaseHandlerError("User não encontrado.")
         
-        updates = {}
-        
         if user.user_id and user.user_id != UUID(current_user.user_id):
             raise UserDatabaseHandlerError("Incosistencia entre o parametro 'user_id' e a proprienda user_id do paramentro 'user'")
         
-        if user.nickname and user.nickname != current_user.nickname:
-            updates['nickname'] = user.nickname
+        updates = {}
         
-        if user.created_at and user.created_at != current_user.created_at:
-            updates['created_at'] = user.created_at
+        check = {
+            "nickname": {"new_value":user.nickname, "comparator":current_user.nickname},
+            "created_at": {"new_value":user.created_at, "comparator":current_user.created_at},
+        }
+        
+        for key, value in check.items():
+            if value["new_value"] is not None and value["new_value"] != value["comparator"]:
+                updates[key] = value["new_value"]
         
         if updates:
             result = cls._db.update(
