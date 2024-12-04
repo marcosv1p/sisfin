@@ -7,6 +7,7 @@ from src.financial.models import AccountModel, UserModel
 from src.financial.database_handler.database_handler_interface import DatabaseHandlerInterface
 from src.financial.exceptions.database_handler_error import AccountDatabaseHandlerError
 
+
 class AccountDatabaseHandler(DatabaseHandlerInterface):
     _db = AccountRepository()
     
@@ -31,25 +32,22 @@ class AccountDatabaseHandler(DatabaseHandlerInterface):
         if not current_account:
             raise AccountDatabaseHandlerError("Conta não encontrada.")
         
-        updates = {}
-        
         if account.account_id and account.account_id != UUID(current_account.account_id):
             raise AccountDatabaseHandlerError("Incosistencia entre o parametro 'account_id' e a proprienda account_id do paramentro 'account'")
         
-        if account.name and account.name != current_account.name:
-            updates['name'] = account.name
+        updates = {}
         
-        if account.description and account.description != current_account.description:
-            updates['description'] = account.description
+        check = {
+            "name": {"new_value":account.name, "comparator":current_account.name},
+            "description": {"new_value":account.description, "comparator":current_account.description},
+            "balance": {"new_value":account.balance, "comparator":current_account.balance},
+            "created_at": {"new_value":account.created_at, "comparator":current_account.created_at},
+            "created_by": {"new_value":account.created_by.hex, "comparator":current_account.created_by},
+        }
         
-        if account.balance and account.balance != Decimal(current_account.balance):
-            updates['balance'] = account.balance
-        
-        if account.created_at and account.created_at != current_account.created_at:
-            updates['created_at'] = account.created_at
-        
-        if account.created_by and account.created_by.hex != current_account.created_by:
-            updates['created_by'] = account.created_by.hex
+        for key, value in check.items():
+            if value["new_value"] is not None and value["new_value"] != value["comparator"]:
+                updates[key] = value["new_value"]
         
         if updates:
             result = cls._db.update(
@@ -75,7 +73,7 @@ class AccountDatabaseHandler(DatabaseHandlerInterface):
                 account_id=UUID(data.account_id),
                 name=data.name,
                 description=data.description,
-                balance=Decimal(data.balance),
+                balance=Decimal(f"{data.balance:.2f}"),
                 created_at=data.created_at,
                 created_by=UUID(data.created_by),
             )
