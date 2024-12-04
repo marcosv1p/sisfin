@@ -42,7 +42,7 @@ class TransactionDatabaseHandler(DatabaseHandlerInterface):
         
         updates = {}
         
-        transaction_propertys = {
+        check = {
             # Valor, new_value, comparator
             # Se new_value for diferente de comparator
             # Defina Valor como new_value
@@ -54,11 +54,11 @@ class TransactionDatabaseHandler(DatabaseHandlerInterface):
             "calculate": {"new_value": transaction.calculate, "comparator":current_transaction.calculate},
             "created_at": {"new_value": transaction.created_at, "comparator":current_transaction.created_at},
             "created_by": {"new_value": transaction.created_by.hex, "comparator":current_transaction.created_by},
-            "origin": {"new_value": (transaction.origin.account_id.hex if transaction.origin else None), "comparator":(current_transaction.origin if current_transaction.origin else None) },
+            "origin": {"new_value": (transaction.origin.hex if transaction.origin else None), "comparator":(current_transaction.origin if current_transaction.origin else None) },
             "destination": {"new_value": transaction.destination.hex, "comparator":current_transaction.destination},
         }
         
-        for key, value in transaction_propertys.items():
+        for key, value in check.items():
             if value["new_value"] is not None and value["new_value"] != value["comparator"]:
                 updates[key] = value["new_value"]
             
