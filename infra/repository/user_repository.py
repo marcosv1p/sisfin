@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional, List
 
-from infra.entities.user import User
-from infra.configs.connection import DBConnectionHandler
+from infra.entities import User
+from infra.configs import DBConnectionHandler
 
 
 class UserRepository:
@@ -16,26 +16,18 @@ class UserRepository:
                 .all()
             return data
     
-    def select_from_id(self, user_id: str) -> Optional[User]:
+    def select_from_id(self, id: str) -> Optional[User]:
         with DBConnectionHandler() as db:
             data = db.session\
                 .query(User)\
-                .filter(User.user_id==user_id)\
+                .filter(User.id==id)\
                 .one_or_none()
             return data
     
-    def select_from_nickname(self, nickname: str) -> Optional[User]:
-        with DBConnectionHandler() as db:
-            data = db.session\
-                .query(User)\
-                .filter(User.nickname==nickname)\
-                .one_or_none()
-            return data
-    
-    def insert(self, user_id:str, nickname: str, created_at: datetime) -> User:
+    def insert(self, id:str, nickname: str, created_at: datetime) -> User:
         with self.db as db:
             new_user = User(
-                user_id = user_id,
+                id = id,
                 nickname = nickname,
                 created_at = created_at
             )
@@ -43,19 +35,19 @@ class UserRepository:
             db.session.commit()
             return new_user
     
-    def update(self, user_id:str, nickname: str=None, created_at: datetime=None) -> Optional[User]:
+    def update(self, id:str, nickname:str=None, created_at:datetime=None) -> Optional[User]:
         with DBConnectionHandler() as db:
-            user = db.session.query(User).filter(User.user_id == user_id).one_or_none()
+            user = db.session.query(User).filter(User.id == id).one_or_none()
             if user:
                 if nickname:
                     user.nickname = nickname
                 if created_at:
                     user.created_at = created_at
                 db.session.commit()
-                return self.select_from_id(user_id=user_id)
+                return self.select_from_id(id=id)
             return None
     
-    def delete(self, user_id: str) -> None:
+    def delete(self, id: str) -> None:
         with DBConnectionHandler() as db:
-            db.session.query(User).filter(User.user_id == user_id).delete()
+            db.session.query(User).filter(User.id == id).delete()
             db.session.commit()

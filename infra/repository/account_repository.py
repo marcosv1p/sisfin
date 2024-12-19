@@ -1,9 +1,8 @@
 from datetime import datetime
 from typing import Optional, List
 
-from infra.entities.user import User
-from infra.entities.account import Account
-from infra.configs.connection import DBConnectionHandler
+from infra.entities import Account
+from infra.configs import DBConnectionHandler
 
 
 class AccountRepository:
@@ -17,43 +16,65 @@ class AccountRepository:
                 .all()
         return data
     
-    def select_from_id(self, account_id: str) -> Optional[Account]:
+    def select_from_id(self, id: str) -> Optional[Account]:
         with self.db as db:
-            return db.session.query(Account).filter(Account.account_id == account_id).one_or_none()
+            return db.session\
+                .query(Account)\
+                .filter(Account.id == id)\
+                .one_or_none()
     
-    def insert(self, account_id: str, name: str, description: str, balance: float, created_at: datetime, created_by: User ) -> Account:
+    def insert(self, id: str,
+            name: str,
+            description: str,
+            account_tag_id: str,
+            balance: float,
+            created_at: datetime,
+            user_id: str) -> Account:
         with self.db as db:
             new_account = Account(
-                account_id=account_id,
+                id=id,
                 name=name,
                 description=description,
+                account_tag_id=account_tag_id,
                 balance=balance,
                 created_at=created_at,
-                created_by=created_by,
+                user_id=user_id,
             )
             db.session.add(new_account)
             db.session.commit()
             return new_account
     
-    def update(self, account_id: str, name: str, description: str, balance: float, created_at: datetime, created_by: User) -> Optional[Account]:
+    def update(self, id: str = None,
+            name: str = None,
+            description: str = None,
+            account_tag_id: str = None,
+            balance: float = None,
+            created_at: datetime = None,
+            user_id: str = None) -> Optional[Account]:
         with self.db as db:
-            account = db.session.query(Account).filter(Account.account_id == account_id).one_or_none()
-            if account:
-                if name:
-                    account.name = name
-                if description:
-                    account.description = description
-                if balance:
-                    account.balance = balance
-                if created_at:
-                    account.created_at = created_at
-                if created_by:
-                    account.created_by = created_by
-                db.session.commit()
-                return self.select_from_id(account_id=account_id)
-            return None
+            account = db.session.query(Account).filter(Account.id == id).one_or_none()
+            
+            if not account:
+                return None
+            
+            fields_to_update = {
+                "name": name,
+                "description": description,
+                "account_tag_id": account_tag_id,
+                "balance": balance,
+                "created_at": created_at,
+                "user_id": user_id,
+            }
+            
+            for field, value in fields_to_update.items():
+                if value is not None:
+                    setattr(account, field, value)
+            
+            db.session.commit()
+            
+            return self.select_from_id(id=id)
     
-    def delete(self, account_id: str) -> None:
+    def delete(self, id: str) -> None:
         with self.db as db:
-            db.session.query(Account).filter(Account.account_id == account_id).delete()
+            db.session.query(Account).filter(Account.id == id).delete()
             db.session.commit()

@@ -1,9 +1,8 @@
 from datetime import datetime
 from typing import Optional, List
 
-from infra.entities.user import User
-from infra.entities.transaction import Transaction
-from infra.configs.connection import DBConnectionHandler
+from infra.entities import Transaction
+from infra.configs import DBConnectionHandler
 
 
 class TransactionRepository:
@@ -17,63 +16,94 @@ class TransactionRepository:
             .all()
         return data
     
-    def select_from_id(self, transaction_id: str) -> Optional[Transaction]:
+    def select_from_id(self, id: str) -> Optional[Transaction]:
         with self.db as db:
-            return db.session.query(Transaction).filter(Transaction.transaction_id == transaction_id).one_or_none()
+            return db.session\
+                .query(Transaction)\
+                .filter(Transaction.id == id)\
+                .one_or_none()
     
-    def insert(self, transaction_id: str, date: datetime, description: str, amount: float, transaction_type: str, status: bool, calculate: bool, created_at: datetime, created_by: User,  origin: Optional[str], destination: str) -> Transaction:
+    def insert(self,
+            id: str,
+            date: datetime,
+            description: str,
+            amount: float,
+            transaction_type: str,
+            paid: bool,
+            ignore: bool,
+            visible: bool,
+            category_id: str,
+            tag_id: str,
+            account_id_origin: Optional[str],
+            account_id_destination: str,
+            created_at: datetime,
+            user_id: str) -> Transaction:
         with self.db as db:
             new_transaction = Transaction(
-                transaction_id=transaction_id,
+                id=id,
                 date=date,
                 description=description,
                 amount=amount,
                 transaction_type=transaction_type,
-                status=status,
-                calculate=calculate,
+                paid=paid,
+                ignore=ignore,
+                visible=visible,
+                category_id=category_id,
+                tag_id=tag_id,
+                account_id_origin=account_id_origin,
+                account_id_destination=account_id_destination,
                 created_at=created_at,
-                created_by=created_by,
-                origin=origin,
-                destination=destination,
+                user_id=user_id,
             )
             db.session.add(new_transaction)
             db.session.commit()
             return new_transaction
     
-    def update(self, transaction_id: str, date: datetime=None, description: str=None, amount: float=None, transaction_type: str=None, status: bool=None, calculate: bool=None, created_at: datetime=None, created_by: User=None,  origin: Optional[str]=None, destination: str=None) -> Optional[Transaction]:
+    def update(self,
+            id: str,
+            date: datetime = None,
+            description: str = None,
+            amount: float = None,
+            transaction_type: str = None,
+            paid: bool = None,
+            ignore: bool = None,
+            visible: bool = None,
+            category_id: str = None,
+            tag_id: str = None,
+            account_id_origin: Optional[str] = None,
+            account_id_destination: str = None,
+            created_at: datetime = None,
+            user_id: str = None) -> Optional[Transaction]:
         with self.db as db:
-            transaction = db.session.query(Transaction).filter(Transaction.transaction_id == transaction_id).one_or_none()
+            transaction = db.session.query(Transaction).filter(Transaction.id == id).one_or_none()
+            
             if transaction:
-                if date is not None:
-                    transaction.date = date
-                if description is not None:
-                    transaction.description = description
-                if amount is not None:
-                    transaction.amount = amount
-                if transaction_type is not None:
-                    transaction.transaction_type = transaction_type
-                if status is not None:
-                    transaction.status = status
-                if calculate is not None:
-                    transaction.calculate = calculate
-                if created_at is not None:
-                    transaction.created_at = created_at
-                if created_by is not None:
-                    transaction.created_by = created_by
-                if origin is not None:
-                    transaction.origin = origin
-                if destination is not None:
-                    transaction.destination = destination
-                db.session.commit()
-                return self.select_from_id(transaction_id=transaction_id)
-            return None
+                return None
+            
+            fields_to_update = {
+                "date": date,
+                "description": description,
+                "amount": amount,
+                "transaction_type": transaction_type,
+                "paid": paid,
+                "ignore": ignore,
+                "visible": visible,
+                "category_id": category_id,
+                "tag_id": tag_id,
+                "account_id_origin": account_id_origin,
+                "account_id_destination": account_id_destination,
+                "created_at": created_at,
+                "user_id": user_id,
+            }
+            
+            for field, value in fields_to_update.items():
+                if value is not None:  # Só atualiza se o valor não for None
+                    setattr(transaction, field, value)
+            db.session.commit()
+            
+            return self.select_from_id(id=id)
     
-    def delete(self, transaction_id: str) -> None:
-        """Deleta uma transação com base no ID fornecido.
-        
-        Args:
-            transaction_id (str): O ID da transação a ser deletada.
-        """
+    def delete(self, id: str) -> None:
         with self.db as db:
-            db.session.query(Transaction).filter(Transaction.transaction_id == transaction_id).delete()
+            db.session.query(Transaction).filter(Transaction.id == id).delete()
             db.session.commit()
