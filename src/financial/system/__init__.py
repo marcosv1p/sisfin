@@ -1,1 +1,1 @@
-from src.financial.system.financial_handler import FinancialHandler
+from src.financial.system.financial import FinancialHandler

@@ -1,3 +1,6 @@
 from infra.repository.user_repository import UserRepository
 from infra.repository.account_repository import AccountRepository
+from infra.repository.account_tag_repository import AccountTagRepository
 from infra.repository.transaction_repository import TransactionRepository
+from infra.repository.transaction_category_repository import TransactionCategoryRepository
+from infra.repository.transaction_tag_repository import TransactionTagRepository
