@@ -59,9 +59,9 @@ class TransactionTypes(Enum):
     ADJUST = "ajuste"
 
 
-class TransactionModel(DataInterface):
+class TransactionModel(BaseModel):
     # UUID da trasação
-    transaction_id: UUID = Field(default_factory=uuid4)
+    id: UUID = Field(default_factory=uuid4)
     
     # Data da trasação
     date: datetime = Field(default_factory=datetime.now)
