@@ -30,50 +30,53 @@ class UserDatabaseAdapter(DatabaseAdapterInterface):
     
     @classmethod
     def update(cls, id: UUID, user: UserModel) -> None:
-        if isinstance(user, UserModel):
+        # Valida o tipo do argumento 'user'
+        if not isinstance(user, UserModel):
             raise UnexpectedArgumentTypeError()
         
-        if isinstance(id, UUID):
+        # Valida o tipo do argumento 'id'
+        if not isinstance(id, UUID):
             raise UnexpectedArgumentTypeError()
         
         current_user = cls._db.select_from_id(id=id.hex)
         
-        if not current_user:
+        # Valida se existe um usuário com o id informado
+        if current_user is None:
             raise UserNotFoundError()
         
+        # Valida se o 'id' foi modificado
         if user.id and user.id != UUID(current_user.id):
-            error = UserDBAdapterError()
-            error.error_message = "Incosistencia entre o parametro 'id' e a proprienda id do paramentro 'user'"
-            raise error
+            raise UserDBAdapterError(error_message="Incosistencia entre o parametro 'id' e a proprienda id do paramentro 'user'")
         
-        updates = {}
-        
-        check = {
-            "nickname": {"new_value":user.nickname, "comparator":current_user.nickname},
-            "created_at": {"new_value":user.created_at, "comparator":current_user.created_at},
+        # Aqui cria um mapa de atualizações com o novo valor e o valor atual
+        updates_map = {
+            "nickname": {"new_value": user.nickname, "current_value": current_user.nickname},
+            "created_at": {"new_value": user.created_at, "current_value": current_user.created_at},
         }
         
-        for key, value in check.items():
-            if value["new_value"] is not None and value["new_value"] != value["comparator"]:
-                updates[key] = value["new_value"]
+        # Aqui cria um dicionário com as atualizações que serão feitas
+        updates_to_apply = {
+            key: value["new_value"]
+            if value["new_value"] != value["current_value"]
+            else None # Isso aqui é necessario pois pode haver necidade de fornecer o argumento mesmo que vazio
+            for key, value in updates_map.items()
+        }
         
-        if updates:
-            result = cls._db.update(
-                id=id.hex,
-                name=updates.get("nickname"),
-                created_at=updates.get("new_created_at"),
-            )
+        if updates_to_apply:
+            result = cls._db.update(id=id.hex, **updates_to_apply)
             if not result:
-                error = UserDBAdapterError()
-                error.error_message = "Falha ao tentar atualizar 'User'"
-                raise error
+                raise UserDBAdapterError("Falha ao tentar atualizar 'User'")
     
     @classmethod
     def delete(cls, id: UUID) -> None:
+        if not isinstance(id, UUID):
+            raise UnexpectedArgumentTypeError()
         cls._db.delete(id.hex)
     
     @classmethod
     def get(cls, id: UUID) -> Optional[UserModel]:
+        if not isinstance(id, UUID):
+            raise UnexpectedArgumentTypeError()
         data = cls._db.select_from_id(id.hex)
         if data:
             return UserModel(
