@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from infra import UserRepository
 from src.financial.models import UserModel
-from src.financial.interfaces.database_interfaces import DatabaseAdapterInterface
+from src.financial.interfaces import DatabaseAdapterInterface
 from src.financial.exceptions.database_adapter_errors import UserDBAdapterError, UserNotFoundError, UserAlreadyExistsError, UnexpectedArgumentTypeError
 
 
