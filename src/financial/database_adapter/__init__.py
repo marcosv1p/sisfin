@@ -1,1 +1,2 @@
 from src.financial.database_adapter.user_db_adapter import UserDatabaseAdapter
+from src.financial.database_adapter.account_db_adapter import AccountDatabaseAdapter
