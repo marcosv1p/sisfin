@@ -23,10 +23,11 @@ class AccountRepository:
                 .filter(Account.id == id)\
                 .one_or_none()
     
-    def insert(self, id: str,
+    def insert(self,
+            id: str,
             name: str,
             description: str,
-            account_tag_id: str,
+            tag_id: str,
             balance: float,
             created_at: datetime,
             user_id: str) -> Account:
@@ -35,7 +36,7 @@ class AccountRepository:
                 id=id,
                 name=name,
                 description=description,
-                account_tag_id=account_tag_id,
+                tag_id=tag_id,
                 balance=balance,
                 created_at=created_at,
                 user_id=user_id,
@@ -44,10 +45,11 @@ class AccountRepository:
             db.session.commit()
             return new_account
     
-    def update(self, id: str = None,
+    def update(self,
+            id: str = None,
             name: str = None,
             description: str = None,
-            account_tag_id: str = None,
+            tag_id: str = None,
             balance: float = None,
             created_at: datetime = None,
             user_id: str = None) -> Optional[Account]:
@@ -60,7 +62,7 @@ class AccountRepository:
             fields_to_update = {
                 "name": name,
                 "description": description,
-                "account_tag_id": account_tag_id,
+                "tag_id": tag_id,
                 "balance": balance,
                 "created_at": created_at,
                 "user_id": user_id,
