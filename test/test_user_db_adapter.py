@@ -5,7 +5,7 @@ import datetime
 from typing import Optional, List
 
 from infra.entities import User
-from src.financial.database_adapter.user_db_adapter import UserDatabaseAdapter
+from src.financial.database_adapter import UserDatabaseAdapter
 from src.financial.models.user_model import UserModel
 from src.financial.exceptions.database_adapter_errors.user_db_adapter_error import UserAlreadyExistsError, UserDBAdapterError, UnexpectedArgumentTypeError, UserNotFoundError
 

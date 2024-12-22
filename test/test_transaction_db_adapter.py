@@ -6,7 +6,7 @@ from decimal import Decimal
 from typing import Optional, List
 
 from infra.entities import Transaction
-from src.financial.database_adapter.transaction_db_adapter import TransactionDatabaseAdapter
+from src.financial.database_adapter import TransactionDatabaseAdapter
 from src.financial.models import TransactionModel, TransactionTypes
 from src.financial.exceptions.database_adapter_errors.transaction_db_adapter_error import TransactionAlreadyExistsError, TransactionDBAdapterError, TransactionNotFoundError, UnexpectedArgumentTypeError
 
