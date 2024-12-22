@@ -45,7 +45,7 @@ class AccountTagDatabaseAdapter(DatabaseAdapterInterface):
         
         # Valida se a conta existe
         if current_account_tag is None:
-            raise account_tag_db_adapter_error.AccountTagNotFoundError("Conta não encontrada.")
+            raise account_tag_db_adapter_error.AccountTagNotFoundError()
         
         # Valida se o 'id' foi modificado
         if account_tag.id and account_tag.id != UUID(current_account_tag.id):

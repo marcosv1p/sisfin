@@ -49,7 +49,7 @@ class AccountDatabaseAdapter(DatabaseAdapterInterface):
         
         # Valida se a conta existe
         if current_account is None:
-            raise AccountNotFoundError("Conta não encontrada.")
+            raise AccountNotFoundError()
         
         # Valida se o 'id' foi modificado
         if account.id and account.id != UUID(current_account.id):
