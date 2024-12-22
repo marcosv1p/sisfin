@@ -2,7 +2,6 @@ import pytest
 import uuid
 import datetime
 
-from decimal import Decimal
 from typing import Optional, List
 
 from infra.entities import TransactionCategory
