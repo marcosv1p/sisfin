@@ -5,7 +5,7 @@ from decimal import Decimal
 from infra.repository import TransactionRepository
 from src.financial.models import TransactionModel, TransactionTypes
 from src.financial.interfaces import DatabaseAdapterInterface
-from src.financial.exceptions.database_adapter_errors.transaction_db_adapter_error import TransactionAlreadyExistsError, TransactionDBAdapterError, TransactionNotFoundError, UnexpectedArgumentTypeError
+from src.financial.exceptions.database_adapter_errors import transaction_db_adapter_error
 
 
 class TransactionDatabaseAdapter(DatabaseAdapterInterface):
@@ -15,13 +15,13 @@ class TransactionDatabaseAdapter(DatabaseAdapterInterface):
     def insert(cls, transaction: TransactionModel) -> None:
         # Valida o tipo do argumento 'transaction'
         if not isinstance(transaction, TransactionModel):
-            raise UnexpectedArgumentTypeError()
+            raise transaction_db_adapter_error.UnexpectedArgumentTypeError()
         
         exist_trasaction = cls._db.select_from_id(transaction.id.hex)
         
         # Valida se a transação já existe
         if exist_trasaction:
-            raise TransactionAlreadyExistsError()
+            raise transaction_db_adapter_error.TransactionAlreadyExistsError()
         
         result = cls._db.insert(
             id=transaction.id.hex,
@@ -46,21 +46,21 @@ class TransactionDatabaseAdapter(DatabaseAdapterInterface):
     def update(cls, id: UUID, transaction: TransactionModel) -> None:
         # Valida o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise UnexpectedArgumentTypeError()
+            raise transaction_db_adapter_error.UnexpectedArgumentTypeError()
         
         # Valida o tipo do argumento 'transaction'
         if not isinstance(transaction, TransactionModel):
-            raise UnexpectedArgumentTypeError()
+            raise transaction_db_adapter_error.UnexpectedArgumentTypeError()
         
         current_transaction = cls._db.select_from_id(id=id.hex)
         
         # Valida se existe um usuário com o id informado
         if current_transaction is None:
-            raise TransactionNotFoundError()
+            raise transaction_db_adapter_error.TransactionNotFoundError()
         
         # Valida se o 'id' foi modificado
         if transaction.id and transaction.id != UUID(current_transaction.id):
-            raise TransactionDBAdapterError(error_message="Incosistencia entre o parametro 'id' e a proprienda id do paramentro 'transaction'")
+            raise transaction_db_adapter_error.TransactionDBAdapterError(error_message="Incosistencia entre o parametro 'id' e a proprienda id do paramentro 'transaction'")
         
         updates_map = {
             "date": {"new_value": transaction.date, "current_value": current_transaction.date},
@@ -89,20 +89,20 @@ class TransactionDatabaseAdapter(DatabaseAdapterInterface):
         if updates_to_apply:
             result = cls._db.update(id=id.hex, **updates_to_apply)
             if not result:
-                raise TransactionDBAdapterError("Falha ao tentar atualizar 'Transaction'")
+                raise transaction_db_adapter_error.TransactionDBAdapterError("Falha ao tentar atualizar 'Transaction'")
     
     @classmethod
     def delete(cls, id: UUID) -> None:
         # Valida o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise UnexpectedArgumentTypeError()
+            raise transaction_db_adapter_error.UnexpectedArgumentTypeError()
         cls._db.delete(id=id.hex)
     
     @classmethod
     def get(cls, id: UUID) -> Optional[TransactionModel]:
         # Valida o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise UnexpectedArgumentTypeError()
+            raise transaction_db_adapter_error.UnexpectedArgumentTypeError()
         data = cls._db.select_from_id(id=id.hex)
         if not data:
             return None
