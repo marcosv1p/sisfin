@@ -4,3 +4,4 @@ from src.financial.database_adapter.transaction_db_adapter import TransactionDat
 from src.financial.database_adapter.account_tag_db_adapter import AccountTagDatabaseAdapter
 from src.financial.database_adapter.transaction_tag_db_adapter import TransactionTagDatabaseAdapter
 from src.financial.database_adapter.transaction_category_db_adapter import TransactionCategoryDatabaseAdapter
+from src.financial.database_adapter.database_handler import DatabaseHandler, Databases
