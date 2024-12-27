@@ -11,10 +11,9 @@ class AccountRepository:
     
     def select(self) -> List[Account]:
         with self.db as db:
-            data = db.session\
+            return db.session\
                 .query(Account)\
                 .all()
-        return data
     
     def select_from_id(self, id: str) -> Optional[Account]:
         with self.db as db:
