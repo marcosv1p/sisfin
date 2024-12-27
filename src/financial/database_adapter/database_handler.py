@@ -37,7 +37,7 @@ class DatabaseHandler:
             case Databases.USERS:
                 _database_match = UserDatabaseAdapter
             case _:
-                _database_match = DatabaseHandlerInterface
+                _database_match = DatabaseAdapterInterface
         
         # Evitar que o atributo `_database` seja tratado por `__setattr__`
         super().__setattr__('_database', _database_match)
