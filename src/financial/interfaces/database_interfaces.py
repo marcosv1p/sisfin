@@ -13,7 +13,7 @@ class DataInterface(Protocol):
 
 
 class DatabaseAdapterInterface(ABC):
-    _db = ProtocolRepository
+    _db: ProtocolRepository
     
     @classmethod
     @abstractmethod
