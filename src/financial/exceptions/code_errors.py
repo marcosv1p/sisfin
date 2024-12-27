@@ -3,6 +3,7 @@ from enum import Enum
 class FinacialErrorTag(Enum):
     GENERIC = "generic"
     DATABASE_ADAPTER = "database_adapter"
+    HANDLER = "handler"
 
 
 class FinacialErrorGroup(Enum):
