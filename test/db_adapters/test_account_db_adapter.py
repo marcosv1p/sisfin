@@ -6,8 +6,8 @@ from decimal import Decimal
 from typing import Optional, List
 
 from infra.entities import Account
-from src.financial.database_adapter import AccountDatabaseAdapter
 from src.financial.models import AccountModel
+from src.financial.database_adapter import AccountDatabaseAdapter
 from src.financial.exceptions.database_adapter_errors.account_db_adapter_error import AccountAlreadyExistsError, AccountDBAdapterError, AccountNotFoundError, UnexpectedArgumentTypeError
 
 
