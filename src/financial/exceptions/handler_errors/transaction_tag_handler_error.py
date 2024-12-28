@@ -5,7 +5,7 @@ from src.financial.exceptions.code_errors import FinacialErrorGroup, FinacialErr
 class TransactionTagHandlerError(HandlerError):
     def __init__(self,
                 error_tag:FinacialErrorTag=FinacialErrorTag.HANDLER,
-                error_group:FinacialErrorGroup=FinacialErrorGroup.ACCOUNT,
+                error_group:FinacialErrorGroup=FinacialErrorGroup.TRANSACTION_TAG,
                 error_type: FinacialErrorType = FinacialErrorType.INVALID_INPUT,
                 error_message: str = "Error generico em 'TransactionTagHandler'",
                 **kwargs):
@@ -21,7 +21,7 @@ class TransactionTagHandlerError(HandlerError):
 class UnexpectedArgumentTypeError(TransactionTagHandlerError):
     def __init__(self,
                 error_tag:FinacialErrorTag=FinacialErrorTag.HANDLER,
-                error_group:FinacialErrorGroup=FinacialErrorGroup.ACCOUNT,
+                error_group:FinacialErrorGroup=FinacialErrorGroup.TRANSACTION_TAG,
                 error_type: FinacialErrorType = FinacialErrorType.INVALID_INPUT,
                 error_message: str = "Tipo de argumento inesperado",
                 **kwargs):
@@ -37,7 +37,7 @@ class UnexpectedArgumentTypeError(TransactionTagHandlerError):
 class UnexpectedDatabaseTypeError(UnexpectedArgumentTypeError):
     def __init__(self,
                 error_tag:FinacialErrorTag=FinacialErrorTag.HANDLER,
-                error_group:FinacialErrorGroup=FinacialErrorGroup.ACCOUNT,
+                error_group:FinacialErrorGroup=FinacialErrorGroup.TRANSACTION_TAG,
                 error_type: FinacialErrorType = FinacialErrorType.INVALID_INPUT,
                 error_message: str = "Tipo inesperado do argumento 'databese'",
                 **kwargs):
