@@ -14,48 +14,48 @@ class AccountHandler:
         # Valida se o tipo do argumento 'database'
         if not (isinstance(database, (DatabaseAdapterInterface, DatabaseHandler)) or 
                 (isinstance(database, type) and issubclass(database, (DatabaseAdapterInterface, DatabaseHandler)))):
-            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'databese'")
+            raise account_handler_error.UnexpectedDatabaseTypeError("Tipo inesperado do argumento 'databese'")
         self._database = database
         self._refresh_cache()
     
     @property
-    def database(self):
+    def database(self) -> Union[DatabaseAdapterInterface, DatabaseHandler]:
         return self._database
     
     @database.setter
-    def database(self, value: Union[DatabaseAdapterInterface, DatabaseHandler]):
+    def database(self, value: Union[DatabaseAdapterInterface, DatabaseHandler]) -> None:
         # Valida se o tipo do argumento 'value'
         if not (isinstance(value, (DatabaseAdapterInterface, DatabaseHandler)) or 
                 (isinstance(value, type) and issubclass(value, (DatabaseAdapterInterface, DatabaseHandler)))):
             raise account_handler_error.UnexpectedDatabaseTypeError("Tipo inesperado do argumento 'value'")
         self._database = value
     
-    def _refresh_cache(self):
+    def _refresh_cache(self) -> None:
         if not hasattr(self, "_cache"):
             self._cache = list()
         self._cache.extend(self._database.get_all())
     
-    def _get_cache_by_id(self, id: UUID):
+    def _get_cache_by_id(self, id: UUID) -> Optional[AccountModel]:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         return next((account for account in self._cache if account.id == id), None)
     
-    def create_account(self, account: AccountModel):
+    def create_account(self, account: AccountModel) -> None:
         # Valida se o tipo do argumento 'account'
         if not isinstance(account, AccountModel):
             raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'account'")
         self._database.insert(account)
         self._refresh_cache()
     
-    def delete_account(self, id: UUID):
+    def delete_account(self, id: UUID) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         self._database.delete(id)
         self._refresh_cache()
     
-    def update_account(self, id: UUID, account: AccountModel):
+    def update_account(self, id: UUID, account: AccountModel) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
@@ -73,12 +73,12 @@ class AccountHandler:
             return cached_account
         return self._database.get(id)
     
-    def get_all_accounts(self):
+    def get_all_accounts(self) -> List[AccountModel]:
         if cache:=self._cache:
             return cache
         return self._database.get_all()
     
-    def _change_attribute(self, id: UUID, name: str, value: Any):
+    def _change_attribute(self, id: UUID, name: str, value: Any) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
@@ -123,7 +123,7 @@ class AccountHandler:
         account.subtract_balance(amount=amount)
         self.update_account(id=id, account=account)
     
-    def change_name(self, id: UUID, name: str):
+    def change_name(self, id: UUID, name: str) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
@@ -132,7 +132,7 @@ class AccountHandler:
             raise account_handler_error.UnexpectedArgumentTypeError()
         self._change_attribute(id=id, name="name", value=name)
     
-    def change_description(self, id: UUID, description: str):
+    def change_description(self, id: UUID, description: str) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
@@ -141,7 +141,7 @@ class AccountHandler:
             raise account_handler_error.UnexpectedArgumentTypeError()
         self._change_attribute(id=id, name="description", value=description)
     
-    def change_tag_id(self, id: UUID, tag_id: UUID):
+    def change_tag_id(self, id: UUID, tag_id: UUID) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
@@ -150,7 +150,7 @@ class AccountHandler:
             raise account_handler_error.UnexpectedArgumentTypeError()
         self._change_attribute(id=id, name="tag_id", value=tag_id)
     
-    def change_balance(self, id: UUID, balance: Decimal):
+    def change_balance(self, id: UUID, balance: Decimal) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
@@ -159,7 +159,7 @@ class AccountHandler:
             raise account_handler_error.UnexpectedArgumentTypeError()
         self._change_attribute(id=id, name="balance", value=balance)
     
-    def change_created_at(self, id: UUID, created_at: datetime):
+    def change_created_at(self, id: UUID, created_at: datetime) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
@@ -168,7 +168,7 @@ class AccountHandler:
             raise account_handler_error.UnexpectedArgumentTypeError()
         self._change_attribute(id=id, name="created_at", value=created_at)
     
-    def change_user_id(self, id: UUID, user_id: UUID):
+    def change_user_id(self, id: UUID, user_id: UUID) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
             raise account_handler_error.UnexpectedArgumentTypeError()
