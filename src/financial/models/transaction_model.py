@@ -1,18 +1,10 @@
-from enum import Enum
 from typing import Optional
 from decimal import Decimal
 from uuid import UUID, uuid4
 from datetime import datetime
 from pydantic import Field, BaseModel
 
-from src.financial.interfaces import DataInterface
-
-
-class TransactionTypes(Enum):
-    EXPENSE = "despesa"
-    INCOME = "renda"
-    TRANSFER = "transferência"
-    ADJUST = "ajuste"
+from src.financial.enums import TransactionTypes
 
 
 class TransactionModel(BaseModel):
