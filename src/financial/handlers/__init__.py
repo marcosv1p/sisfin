@@ -1,3 +1,3 @@
 from src.financial.handlers.account_handler import AccountHandler
 from src.financial.handlers.account_tag_handler import AccountTagHandler
-from src.financial.handlers.transaction_tag import TransactionTagHandler
+from src.financial.handlers.transaction_tag_handler import TransactionTagHandler
