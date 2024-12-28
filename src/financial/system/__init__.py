@@ -1,1 +1,0 @@
-from src.financial.system.financial import FinancialHandler
