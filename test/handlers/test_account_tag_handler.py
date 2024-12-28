@@ -2,7 +2,6 @@ import pytest
 import uuid
 
 from datetime import datetime
-from decimal import Decimal
 from typing import Optional, List
 
 from src.financial.models import AccountTagModel
