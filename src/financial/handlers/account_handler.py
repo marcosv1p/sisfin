@@ -115,10 +115,10 @@ class AccountHandler:
     def subtract_balance(self, id: UUID, amount: Decimal) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'amount'
         if not isinstance(amount, Decimal):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'amount'")
         account = self._get_cache_by_id(id=id) or self.get_account(id=id)
         account.subtract_balance(amount=amount)
         self.update_account(id=id, account=account)
@@ -126,57 +126,53 @@ class AccountHandler:
     def change_name(self, id: UUID, name: str) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'name'
         if not isinstance(name, str):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'name'")
         self._change_attribute(id=id, name="name", value=name)
     
     def change_description(self, id: UUID, description: str) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'description'
         if not isinstance(description, str):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'description'")
         self._change_attribute(id=id, name="description", value=description)
     
     def change_tag_id(self, id: UUID, tag_id: UUID) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'tag_id'
         if not isinstance(tag_id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'tag_id'")
         self._change_attribute(id=id, name="tag_id", value=tag_id)
     
     def change_balance(self, id: UUID, balance: Decimal) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'balance'
         if not isinstance(balance, Decimal):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'balance'")
         self._change_attribute(id=id, name="balance", value=balance)
     
     def change_created_at(self, id: UUID, created_at: datetime) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'created_at'
         if not isinstance(created_at, datetime):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'created_at'")
         self._change_attribute(id=id, name="created_at", value=created_at)
     
     def change_user_id(self, id: UUID, user_id: UUID) -> None:
         # Valida se o tipo do argumento 'id'
         if not isinstance(id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'id'")
         # Valida se o tipo do argumento 'user_id'
         if not isinstance(user_id, UUID):
-            raise account_handler_error.UnexpectedArgumentTypeError()
+            raise account_handler_error.UnexpectedArgumentTypeError("Tipo inesperado do argumento 'user_id'")
         self._change_attribute(id=id, name="user_id", value=user_id)
-
-
-
-
