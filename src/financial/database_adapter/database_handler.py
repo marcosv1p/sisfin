@@ -1,5 +1,4 @@
-from enum import Enum
-
+from src.financial.enums import Databases
 from src.financial.interfaces import DatabaseAdapterInterface
 from src.financial.database_adapter import (
     AccountDatabaseAdapter,
@@ -9,15 +8,6 @@ from src.financial.database_adapter import (
     TransactionCategoryDatabaseAdapter,
     UserDatabaseAdapter
 )
-
-
-class Databases(Enum):
-    USERS = "user"
-    ACCOUNTS = "account"
-    ACCOUNTS_TAGS = "account_tag"
-    TRANSACTIONS = "transaction"
-    TRANSACTIONS_TAGS = "transaction_tag"
-    TRANSACTIONS_CATEGORIES = "transaction_category"
 
 
 class DatabaseHandler:
