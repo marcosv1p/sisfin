@@ -10,7 +10,7 @@ from src.financial.exceptions.handler_errors import transaction_handler_error
 
 
 class TransactionHandler:
-    def __init__(self, database: Union[DatabaseAdapterInterface, DatabaseHandler] = DatabaseHandler(database=Databases.TRANSACTIONS_TAGS)):
+    def __init__(self, database: Union[DatabaseAdapterInterface, DatabaseHandler] = DatabaseHandler(database=Databases.TRANSACTIONS)):
         # Valida o tipo do argumento 'database'
         if not (isinstance(database, (DatabaseAdapterInterface, DatabaseHandler)) or 
                 (isinstance(database, type) and issubclass(database, (DatabaseAdapterInterface, DatabaseHandler)))):
