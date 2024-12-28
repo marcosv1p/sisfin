@@ -161,6 +161,7 @@ def test_transaction_handler_changers_account_properts(transaction_handler: Tran
     transaction_handler.change_created_at(id=id, created_at=new_created_at)
     transaction_handler.change_user_id(id=id, user_id=new_user_id)
     
+    assert REGISTER[0].id == id
     assert REGISTER[0].date == new_date
     assert REGISTER[0].description == new_description
     assert REGISTER[0].amount == new_amount

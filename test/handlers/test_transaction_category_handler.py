@@ -107,6 +107,7 @@ def test_transaction_category_handler_changers_account_properts(transaction_cate
     transaction_category_handler.change_user_id(id=id, user_id=new_user_id)
     transaction_category_handler.change_created_at(id=id, created_at=new_created_at)
     
+    assert REGISTER[0].id == id
     assert REGISTER[0].name == new_name
     assert REGISTER[0].user_id == new_user_id
     assert REGISTER[0].created_at == new_created_at
