@@ -13,7 +13,7 @@ class AccountModel(BaseModel):
     name: str = Field(default=uuid4().hex)
     
     # Descrição da conta
-    description: str = Field(default=None)
+    description: Optional[str] = Field(default=None)
     
     # Tag é um marcador para melhor organização da conta
     tag_id: Optional[UUID] = Field(default=None)

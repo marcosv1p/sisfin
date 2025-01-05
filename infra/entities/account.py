@@ -9,8 +9,8 @@ class Account(Base):
     
     id = Column(String(64), primary_key=True, nullable=False)
     name = Column(String(64), nullable=False)
-    description = Column(String(256), nullable=False)
-    tag_id = Column(String(64), ForeignKey("accounts_tags.id"), nullable=False)
+    description = Column(String(256), nullable=True)
+    tag_id = Column(String(64), ForeignKey("accounts_tags.id"), nullable=True)
     balance = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False)
     user_id = Column(String(64), ForeignKey("users.id"), nullable=False)

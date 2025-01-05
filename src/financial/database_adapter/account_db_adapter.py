@@ -27,7 +27,7 @@ class AccountDatabaseAdapter(DatabaseAdapterInterface):
             id=account.id.hex,
             name=account.name,
             description=account.description,
-            tag_id=account.tag_id.hex,
+            tag_id=getattr(account.tag_id, 'hex', account.tag_id),
             balance=account.balance,
             created_at=account.created_at,
             user_id=account.user_id.hex,
